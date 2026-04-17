@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #10b981; /* Emerald */
+  --primary-hover: #059669; /* Emerald darker */
+  --secondary: #8b5cf6; /* Violet */
+  --bg-dark: #0B1120;
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Outfit', 'Inter', sans-serif;
+}
+
+body {
+  @apply bg-bg-dark text-white min-h-screen overflow-x-hidden;
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.15) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.15) 0%, transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(14, 165, 233, 0.1) 0%, transparent 60%);
+  background-attachment: fixed;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(11, 17, 32, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(16, 185, 129, 0.2);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(16, 185, 129, 0.4);
+}
+
+/* Base Classes */
+@layer components {
+  .glass-card {
+    @apply bg-white/5 backdrop-blur-xl border border-white/10 rounded-[2rem] shadow-2xl transition-all duration-300;
+  }
+
+  .btn-primary {
+    @apply relative overflow-hidden bg-gradient-to-r from-primary to-secondary text-white px-6 py-3 rounded-2xl font-semibold flex items-center gap-2 transition-all duration-300 hover:scale-[1.02] active:scale-95 shadow-lg shadow-primary/25 hover:shadow-primary/40;
+  }
+
+  .btn-primary::after {
+    content: '';
+    @apply absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300;
+  }
+
+  .btn-primary:hover::after {
+    @apply opacity-100;
+  }
+
+  .input-field {
+    @apply w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-3 text-white placeholder-text-muted outline-none transition-all duration-300 focus:border-primary/50 focus:bg-white/10 focus:ring-4 focus:ring-primary/10;
+  }
+}
+
+/* Selection Color */
+::selection {
+  background: rgba(16, 185, 129, 0.3);
+  color: #fff;
+}
+
+/* Global Animations */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
