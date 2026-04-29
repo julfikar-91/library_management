@@ -19,14 +19,43 @@ app.get('/', (req, res) => {
 const bookRoutes = require('./routes/bookRoutes');
 const memberRoutes = require('./routes/memberRoutes');
 const transactionRoutes = require('./routes/transactionRoutes');
+const authRoutes = require('./routes/authRoutes');
+const notificationRoutes = require('./routes/notificationRoutes');
+const fineRoutes = require('./routes/fineRoutes');
+
+// Import Model to seed
+const Admin = require('./models/Admin');
 
 app.use('/api/books', bookRoutes);
 app.use('/api/members', memberRoutes);
 app.use('/api/transactions', transactionRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/fine', fineRoutes);
+
+// Seed Admin Helper
+const seedAdmin = async () => {
+    try {
+        const adminExists = await Admin.findOne({ email: 'admin@mrem.edu' });
+        if (!adminExists) {
+            await Admin.create({
+                email: 'admin@mrem.edu',
+                phone: '1234567890',
+                password: 'admin123'
+            });
+            console.log('Seeded Default Admin: admin@mrem.edu / 1234567890 / admin123');
+        }
+    } catch (err) {
+        console.error('Seed Admin error:', err);
+    }
+};
 
 // Database Connection
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/library_mrem')
-    .then(() => console.log('MongoDB Connected'))
+    .then(() => {
+        console.log('MongoDB Connected');
+        seedAdmin();
+    })
     .catch(err => console.log('MongoDB Connection Error:', err));
 
 app.listen(PORT, () => {

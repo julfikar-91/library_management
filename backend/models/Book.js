@@ -11,7 +11,10 @@ const bookSchema = new mongoose.Schema({
     availableCopies: { type: Number, default: 1 },
     location: { type: String },
     description: { type: String },
-    coverImage: { type: String }
+    coverImage: { type: String },
+    department: { type: String },
+    semester: { type: String },
+    pdfUrl: { type: String }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Book', bookSchema);

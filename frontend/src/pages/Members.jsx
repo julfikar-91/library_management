@@ -7,6 +7,7 @@ import AddMemberModal from '../components/AddMemberModal';
 const Members = () => {
   const [members, setMembers] = useState([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     fetchMembers();
@@ -50,8 +51,26 @@ const Members = () => {
         </button>
       </div>
 
+      <div className="relative group max-w-md">
+        <div className="absolute inset-0 bg-primary/10 blur-xl opacity-0 group-focus-within:opacity-100 transition-opacity duration-500"></div>
+        <div className="relative">
+          <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-text-muted group-focus-within:text-primary transition-colors duration-300" size={18} />
+          <input 
+            type="text" 
+            placeholder="Search by name, email or member ID..." 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-14 pr-6 text-sm text-white placeholder-text-muted outline-none transition-all duration-300 focus:bg-white/10 focus:border-primary/50 focus:ring-4 focus:ring-primary/5 shadow-inner"
+          />
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {members.map((member, index) => (
+        {members.filter(m => 
+          m.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+          m.memberId.toLowerCase().includes(searchQuery.toLowerCase()) || 
+          m.email.toLowerCase().includes(searchQuery.toLowerCase())
+        ).map((member, index) => (
           <motion.div
             key={member._id}
             initial={{ opacity: 0, scale: 0.95 }}

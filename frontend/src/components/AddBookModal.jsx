@@ -9,7 +9,11 @@ const AddBookModal = ({ isOpen, onClose, onBookAdded }) => {
     bookId: '',
     genre: '',
     availableCopies: 1,
-    copies: 1
+    copies: 1,
+    department: '',
+    semester: '',
+    coverImage: '',
+    pdfUrl: ''
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -75,6 +79,43 @@ const AddBookModal = ({ isOpen, onClose, onBookAdded }) => {
                 setFormData(prev => ({ ...prev, availableCopies: e.target.value }));
               }} className="input-field" />
             </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-1">
+              <label className="text-[10px] font-black uppercase tracking-widest text-text-muted ml-1">Department</label>
+              <select name="department" value={formData.department} onChange={handleChange} className="w-full bg-bg-dark border border-white/10 rounded-xl py-3 px-4 text-sm text-white outline-none focus:border-primary/50">
+                <option value="">General</option>
+                <option value="CSE">CSE</option>
+                <option value="ECE">ECE</option>
+                <option value="ME">ME</option>
+                <option value="CE">CE</option>
+              </select>
+            </div>
+            <div className="space-y-1">
+              <label className="text-[10px] font-black uppercase tracking-widest text-text-muted ml-1">Semester</label>
+              <select name="semester" value={formData.semester} onChange={handleChange} className="w-full bg-bg-dark border border-white/10 rounded-xl py-3 px-4 text-sm text-white outline-none focus:border-primary/50">
+                <option value="">General</option>
+                <option value="1">1st Sem</option>
+                <option value="2">2nd Sem</option>
+                <option value="3">3rd Sem</option>
+                <option value="4">4th Sem</option>
+                <option value="5">5th Sem</option>
+                <option value="6">6th Sem</option>
+                <option value="7">7th Sem</option>
+                <option value="8">8th Sem</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-[10px] font-black uppercase tracking-widest text-text-muted ml-1">Cover Image URL (Optional)</label>
+            <input type="text" name="coverImage" value={formData.coverImage} onChange={handleChange} placeholder="https://..." className="input-field" />
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-[10px] font-black uppercase tracking-widest text-text-muted ml-1">PDF Document URL (Optional)</label>
+            <input type="text" name="pdfUrl" value={formData.pdfUrl} onChange={handleChange} placeholder="https://..." className="input-field" />
           </div>
 
           <button type="submit" disabled={loading} className="w-full btn-primary py-4 justify-center mt-4">

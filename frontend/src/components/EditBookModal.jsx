@@ -1,0 +1,146 @@
+import React, { useState, useEffect } from 'react';
+import { X } from 'lucide-react';
+import axios from 'axios';
+
+const EditBookModal = ({ isOpen, onClose, onBookUpdated, book }) => {
+  const [formData, setFormData] = useState({
+    title: '',
+    author: '',
+    bookId: '',
+    genre: '',
+    availableCopies: 1,
+    copies: 1,
+    department: '',
+    semester: '',
+    coverImage: '',
+    pdfUrl: ''
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (book) {
+        setFormData({
+          title: book.title || '',
+          author: book.author || '',
+          bookId: book.bookId || '',
+          genre: book.genre || '',
+          availableCopies: book.availableCopies || 1,
+          copies: book.copies || 1,
+          department: book.department || '',
+          semester: book.semester || '',
+          coverImage: book.coverImage || '',
+          pdfUrl: book.pdfUrl || ''
+        });
+    }
+  }, [book]);
+
+  if (!isOpen || !book) return null;
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axios.put(`http://localhost:5000/api/books/${book._id}`, formData);
+      onBookUpdated(response.data);
+      onClose();
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to update book');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+      <div className="glass-card w-full max-w-md p-8 relative overflow-hidden group">
+        <div className="absolute -right-10 -top-10 w-40 h-40 bg-sky-500/20 rounded-full blur-3xl"></div>
+        
+        <button onClick={onClose} className="absolute top-6 right-6 p-2 rounded-xl bg-white/5 text-text-muted hover:text-white hover:bg-white/10 transition-all z-10">
+          <X size={20} />
+        </button>
+
+        <h3 className="text-2xl font-black text-white mb-6 relative z-10">Edit Book</h3>
+
+        <form onSubmit={handleSubmit} className="space-y-4 relative z-10">
+          {error && <div className="p-3 rounded-xl bg-rose-500/10 text-rose-400 text-xs font-bold">{error}</div>}
+          
+          <div className="space-y-1">
+            <label className="text-[10px] font-black uppercase tracking-widest text-text-muted ml-1">Book ID / ISBN</label>
+            <input required type="text" name="bookId" value={formData.bookId} onChange={handleChange} className="input-field" disabled />
+          </div>
+          <div className="space-y-1">
+            <label className="text-[10px] font-black uppercase tracking-widest text-text-muted ml-1">Title</label>
+            <input required type="text" name="title" value={formData.title} onChange={handleChange} className="input-field" />
+          </div>
+          <div className="space-y-1">
+            <label className="text-[10px] font-black uppercase tracking-widest text-text-muted ml-1">Author</label>
+            <input required type="text" name="author" value={formData.author} onChange={handleChange} className="input-field" />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-1">
+              <label className="text-[10px] font-black uppercase tracking-widest text-text-muted ml-1">Genre</label>
+              <input required type="text" name="genre" value={formData.genre} onChange={handleChange} className="input-field" />
+            </div>
+            <div className="space-y-1">
+              <label className="text-[10px] font-black uppercase tracking-widest text-text-muted ml-1">Total Copies</label>
+              <input required type="number" min="1" name="copies" value={formData.copies} onChange={(e) => {
+                handleChange(e);
+                setFormData(prev => ({ ...prev, availableCopies: e.target.value }));
+              }} className="input-field" />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-1">
+              <label className="text-[10px] font-black uppercase tracking-widest text-text-muted ml-1">Department</label>
+              <select name="department" value={formData.department} onChange={handleChange} className="w-full bg-bg-dark border border-white/10 rounded-xl py-3 px-4 text-sm text-white outline-none focus:border-primary/50">
+                <option value="">General</option>
+                <option value="CSE">CSE</option>
+                <option value="ECE">ECE</option>
+                <option value="ME">ME</option>
+                <option value="CE">CE</option>
+              </select>
+            </div>
+            <div className="space-y-1">
+              <label className="text-[10px] font-black uppercase tracking-widest text-text-muted ml-1">Semester</label>
+              <select name="semester" value={formData.semester} onChange={handleChange} className="w-full bg-bg-dark border border-white/10 rounded-xl py-3 px-4 text-sm text-white outline-none focus:border-primary/50">
+                <option value="">General</option>
+                <option value="1">1st Sem</option>
+                <option value="2">2nd Sem</option>
+                <option value="3">3rd Sem</option>
+                <option value="4">4th Sem</option>
+                <option value="5">5th Sem</option>
+                <option value="6">6th Sem</option>
+                <option value="7">7th Sem</option>
+                <option value="8">8th Sem</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-[10px] font-black uppercase tracking-widest text-text-muted ml-1">Cover Image URL (Optional)</label>
+            <input type="text" name="coverImage" value={formData.coverImage} onChange={handleChange} className="input-field" />
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-[10px] font-black uppercase tracking-widest text-text-muted ml-1">PDF Document URL (Optional)</label>
+            <input type="text" name="pdfUrl" value={formData.pdfUrl} onChange={handleChange} className="input-field" />
+          </div>
+
+          <button type="submit" disabled={loading} className="w-full btn-primary py-4 justify-center mt-4">
+            <span className="uppercase tracking-[0.2em] text-xs font-black">{loading ? 'Updating...' : 'Update Book'}</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default EditBookModal;

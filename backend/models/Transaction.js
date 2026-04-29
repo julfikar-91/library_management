@@ -6,8 +6,11 @@ const transactionSchema = new mongoose.Schema({
     issueDate: { type: Date, default: Date.now },
     dueDate: { type: Date, required: true },
     returnDate: { type: Date },
-    status: { type: String, enum: ['Issued', 'Returned', 'Overdue'], default: 'Issued' },
-    fine: { type: Number, default: 0 }
+    status: { type: String, enum: ['Requested', 'Issued', 'Returned', 'Overdue', 'Rejected'], default: 'Issued' },
+    fine: { type: Number, default: 0 },
+    fineReason: { type: String },
+    fineType: { type: String, enum: ['Late', 'Lost', 'Damaged', 'None'], default: 'None' },
+    fineStatus: { type: String, enum: ['Unpaid', 'Paid', 'Waived', 'None'], default: 'None' }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Transaction', transactionSchema);
